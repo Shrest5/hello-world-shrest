@@ -2,9 +2,9 @@ pipeline {
     agent any
 
     environment {
-        SONARQUBE = 'My-SonarQube'                // Name from Jenkins → Configure System
-        DOCKER_IMAGE = "hello-world-image"          // Image name
-        DOCKERHUB_USER = "your-dockerhub-username"
+        SONARQUBE = 'My-SonarQube'
+        DOCKER_IMAGE = "hello-world-image"
+        DOCKERHUB_USER = "shrest5"
     }
 
     stages {
@@ -18,7 +18,7 @@ pipeline {
 
         stage('SonarQube Scan') {
             steps {
-                withSonarQubeEnv(SONARQUBE) {
+                withSonarQubeEnv('My-SonarQube') {
                     sh '''
                         sonar-scanner \
                         -Dsonar.projectKey=hello-world-shrest \
@@ -46,14 +46,10 @@ pipeline {
                 )]) {
 
                     sh '''
-                        echo "Logging in..."
-                        echo $PASS | docker login -u $USER --password-stdin
+                        echo $dockerHubPass | docker login -u $dockerHubUser --password-stdin
 
-                        echo "Tagging image..."
-                        docker tag ${DOCKER_IMAGE}:latest $USER/${DOCKER_IMAGE}:latest
-
-                        echo "Pushing image..."
-                        docker push $USER/${DOCKER_IMAGE}:latest
+                        docker tag ${DOCKER_IMAGE}:latest $dockerHubUser/${DOCKER_IMAGE}:latest
+                        docker push $dockerHubUser/${DOCKER_IMAGE}:latest
 
                         docker logout
                     '''
@@ -71,3 +67,4 @@ pipeline {
         }
     }
 }
+
