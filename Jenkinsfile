@@ -19,7 +19,7 @@ pipeline {
         stage('SonarQube Scan') {
             steps {
                 withSonarQubeEnv('My-SonarQube') {   // MUST be in quotes
-                    withEnv(["PATH+SONAR=${tool 'SonarScanner'}/bin"]) {  // SonarScanner = name in Global Tool Config
+                    withEnv(["PATH+SONAR=${tool 'MySonarScanner'}/bin"]) {  // SonarScanner = name in Global Tool Config
                         sh '''
                             sonar-scanner \
                             -Dsonar.projectKey=hello-world-shrest \
