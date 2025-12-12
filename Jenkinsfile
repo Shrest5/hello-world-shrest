@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        SONARQUBE = 'My-SonarQube'
+        SONARQUBE = 'My-SonarQube'          // Jenkins → Configure System
         DOCKER_IMAGE = "hello-world-image"
         DOCKERHUB_USER = "shrest5"
     }
@@ -18,13 +18,15 @@ pipeline {
 
         stage('SonarQube Scan') {
             steps {
-                withSonarQubeEnv('My-SonarQube') {
-                    sh '''
-                        sonar-scanner \
-                        -Dsonar.projectKey=hello-world-shrest \
-                        -Dsonar.sources=. \
-                        -Dsonar.python.version=3.9
-                    '''
+                withSonarQubeEnv('My-SonarQube') {   // MUST be in quotes
+                    withEnv(["PATH+SONAR=${tool 'SonarScanner'}/bin"]) {  // SonarScanner = name in Global Tool Config
+                        sh '''
+                            sonar-scanner \
+                            -Dsonar.projectKey=hello-world-shrest \
+                            -Dsonar.sources=. \
+                            -Dsonar.host.url=http://16.16.127.41:9000
+                        '''
+                    }
                 }
             }
         }
@@ -40,16 +42,20 @@ pipeline {
         stage("Push to Docker Hub") {
             steps {
                 withCredentials([usernamePassword(
-                    credentialsId: 'docker',
-                    usernameVariable: 'dockerHubUser',
-                    passwordVariable: 'dockerHubPass'
+                    credentialsId: 'docker',      // Your Jenkins DockerHub credential ID
+                    usernameVariable: 'USER',
+                    passwordVariable: 'PASS'
                 )]) {
 
                     sh '''
-                        echo $dockerHubPass | docker login -u $dockerHubUser --password-stdin
+                        echo "Logging into Docker Hub..."
+                        echo $PASS | docker login -u $USER --password-stdin
 
-                        docker tag ${DOCKER_IMAGE}:latest $dockerHubUser/${DOCKER_IMAGE}:latest
-                        docker push $dockerHubUser/${DOCKER_IMAGE}:latest
+                        echo "Tagging image..."
+                        docker tag ${DOCKER_IMAGE}:latest $USER/${DOCKER_IMAGE}:latest
+
+                        echo "Pushing image..."
+                        docker push $USER/${DOCKER_IMAGE}:latest
 
                         docker logout
                     '''
@@ -67,4 +73,5 @@ pipeline {
         }
     }
 }
+
 
