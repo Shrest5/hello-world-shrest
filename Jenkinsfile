@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        SONARQUBE = 'My-SonarQube'          // Jenkins → Configure System
+        SONARQUBE = 'My-SonarQube'          
         DOCKER_IMAGE = "hello-world-image"
         DOCKERHUB_USER = "shrest5"
     }
@@ -18,8 +18,8 @@ pipeline {
 
         stage('SonarQube Scan') {
             steps {
-                withSonarQubeEnv('My-SonarQube') {   // MUST be in quotes
-                    withEnv(["PATH+SONAR=${tool 'MySonarScanner'}/bin"]) {  // SonarScanner = name in Global Tool Config
+                withSonarQubeEnv('My-SonarQube') {   
+                    withEnv(["PATH+SONAR=${tool 'MySonarScanner'}/bin"]) {  
                         sh '''
                             sonar-scanner \
                             -Dsonar.projectKey=hello-world-shrest \
@@ -42,7 +42,7 @@ pipeline {
         stage("Push to Docker Hub") {
             steps {
                 withCredentials([usernamePassword(
-                    credentialsId: 'docker',      // Your Jenkins DockerHub credential ID
+                    credentialsId: 'docker',      
                     usernameVariable: 'USER',
                     passwordVariable: 'PASS'
                 )]) {
