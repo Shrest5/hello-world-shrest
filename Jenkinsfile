@@ -72,6 +72,18 @@ pipeline {
             }
         }
     }
+    post {
+        success {
+            mail to: 'shrestsaha5@gmail.com',
+            subject: "SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+            body: "Job '${env.JOB_NAME} [#${env.BUILD_NUMBER}]' succeeded.\nCheck console output at ${env.BUILD_URL}"
+        }
+        failure {
+            mail to: 'team@example.com',
+            subject: "FAILURE: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+            body: "Job '${env.JOB_NAME} [#${env.BUILD_NUMBER}]' failed.\nCheck console output at ${env.BUILD_URL}"
+        }
+    }
 }
 
 
