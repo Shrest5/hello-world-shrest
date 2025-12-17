@@ -1,8 +1,8 @@
-from flask import Flask
+from fask import Flask
 
-app = Flask(__name__)
+app = Flask__name__)
 
-@app.route("/")
+@app.route)
 def hello():
     return "Hello World, PROJECT 2"
 
