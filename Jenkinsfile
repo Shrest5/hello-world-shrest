@@ -24,7 +24,7 @@ pipeline {
                             sonar-scanner \
                             -Dsonar.projectKey=hello-world-shrest \
                             -Dsonar.sources=. \
-                            -Dsonar.host.url=http://13.50.17.10:9000
+                            -Dsonar.host.url=http://51.20.193.158:9000
                         '''
                     }
                 }
@@ -89,10 +89,3 @@ pipeline {
         }
     }
 }
-
-
-
-    }
-}
-
-
