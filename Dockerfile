@@ -1,10 +1,10 @@
-FROM 
+FROM python:3.9-slim
 
 WORKDIR /app
 
 COPY requirements.txt .
 
-RUN npm install
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
