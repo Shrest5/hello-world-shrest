@@ -24,7 +24,7 @@ pipeline {
                             sonar-scanner \
                             -Dsonar.projectKey=hello-world-shrest \
                             -Dsonar.sources=. \
-                            -Dsonar.host.url=http://16.10.127.41:9000
+                            -Dsonar.host.url=http://13.50.17.10:9000
                         '''
                     }
                 }
@@ -74,15 +74,24 @@ pipeline {
     }
     post {
         success {
-            mail to: 'shrestsaha5@gmail.com',
+            emailext(
             subject: "SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-            body: "Job '${env.JOB_NAME} [#${env.BUILD_NUMBER}]' succeeded.\nCheck console output at ${env.BUILD_URL}"
+            body: """Job '${env.JOB_NAME} [#${env.BUILD_NUMBER}]' succeeded. Build URL: ${env.BUILD_URL}""",
+            to: "amrendra0918@gmail.com"
+            )
         }
         failure {
-            mail to: 'team@example.com',
+            emailext(
             subject: "FAILURE: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-            body: "Job '${env.JOB_NAME} [#${env.BUILD_NUMBER}]' failed.\nCheck console output at ${env.BUILD_URL}"
+            body: """Job '${env.JOB_NAME} [#${env.BUILD_NUMBER}]' failed. Build URL: ${env.BUILD_URL}""",
+            to: "amrendra0918@gmail.com"
+            )
         }
+    }
+}
+
+
+
     }
 }
 
